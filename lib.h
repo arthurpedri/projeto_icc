@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
 
 /* VARIAVEIS */
 int n, nBandas, maxIter;
@@ -11,5 +12,6 @@ FILE *output;
 
 /* PROTOTIPOS DAS FUNCOES */
 void testa_parametros(int argc, char const *argv[]);
-double timestamp ();
+double timestamp();
+int generateRandomDiagonal( unsigned int N, unsigned int k, unsigned int nBandas, double *diag );
 // void grava_arquivo(double *matriz, double *res, int n, int nx, int ny, double hx, double hy, double sor_time, double res_time);
