@@ -3,6 +3,7 @@
 void testa_parametros(int argc, char const *argv[]){
     
     n = atoi(argv[1]);
+    maxIter = n;
     if (n < 0) {
         fprintf(stderr, "ERRO: n negativo: %s\n", argv[1]);
         exit(-1);
@@ -64,16 +65,57 @@ int generateRandomDiagonal( unsigned int N, unsigned int k, unsigned int nBandas
   return (0);
 }
 
-void imprimeMatriz (double **matriz, int N){
-    for (int i = 0; i < N; i++){
-        for (int j = 0; j < N; j++){
+void imprimeMatriz (double **matriz){
+    for (int i = 0; i < n; i++){
+        for (int j = 0; j < n; j++){
             printf("%.5g ", matriz[i][j]);
         }
         printf("\n");
     }
 }
 
-// void grava_arquivo(double *matriz, double *res, int n, int nx, int ny, double hx, double hy, double sor_time, double res_time){
+void imprimeVetor (double *vetor, int max){
+    for (int i = 0; i < max; i++){
+        printf("%.14g ", vetor[i]);
+    }
+    printf("\n");
+}
+
+double produtoInterno (double *vetor1, double *vetor2){
+    double resultado = 0.0;
+    for (int i = 0; i < n; i++){
+       resultado = resultado + (vetor1[i] * vetor2[i]);
+    }
+    return resultado;
+}
+
+void subtracaoVetores (double *resultado, double *vetor1, double *vetor2){
+    for (int i = 0; i < n; i++){
+        resultado[i] = vetor1[i] - vetor2[i];
+    }
+}
+
+double norma_residuo(double *r){
+    double resultado;
+    for(int i = 0; i < n; i++){
+        resultado += pow(r[i], 2);
+    }
+    return sqrt(resultado);
+}
+
+void produtoMatrizVetor (double *resultado, double **matriz, double *vetor){ // melhorar para não multiplicar os zeros
+    for(int i = 0; i < n; i++){
+        resultado[i] = produtoInterno(matriz[i],vetor);
+    }
+}
+
+
+
+double f (double x){
+    return 4*(M_PI*M_PI)*(sin((2*M_PI)*x) + sin(2*M_PI*(M_PI-x)));
+}
+
+// void grava_arquivo(){
         // int i, j;
         // fprintf(output,"#########################################\n");
         // fprintf(output, "# Tempo Método CG: %lf\n", sor_time);
