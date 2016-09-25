@@ -5,16 +5,26 @@ void testa_parametros(int argc, char const *argv[]){
     n = atoi(argv[1]);
     if (n < 0) {
         fprintf(stderr, "ERRO: n negativo: %s\n", argv[1]);
+        exit(-1);
     }
     nBandas = atoi(argv[2]);
+    if (nBandas < 0) {
+        fprintf(stderr, "ERRO: nBandas negativo: %s\n", argv[2]);
+        exit(-1);
+    }
     int i = 3;
     if (!strcmp(argv[i],"-i")) {
         i++;
         maxIter = atoi(argv[i]);
-    } else if (!strcmp(argv[i],"-t")) {
+        i++;
+    } 
+    if (!strcmp(argv[i],"-t")) {
         i++;
         tolerancia = atof(argv[i]);
-    } else if (!strcmp(argv[i],"-o")) {
+        i++;
+    } 
+    if (!strcmp(argv[i],"-o")) {
+        i++;
         arquivo_saida = malloc(sizeof(char) * strlen(argv[i]));
         strcpy(arquivo_saida, argv[i]);
         output = fopen(arquivo_saida, "wr");
@@ -52,6 +62,15 @@ int generateRandomDiagonal( unsigned int N, unsigned int k, unsigned int nBandas
   }
 
   return (0);
+}
+
+void imprimeMatriz (double **matriz, int N){
+    for (int i = 0; i < N; i++){
+        for (int j = 0; j < N; j++){
+            printf("%.5g ", matriz[i][j]);
+        }
+        printf("\n");
+    }
 }
 
 // void grava_arquivo(double *matriz, double *res, int n, int nx, int ny, double hx, double hy, double sor_time, double res_time){

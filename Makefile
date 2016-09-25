@@ -8,10 +8,10 @@ main: functions.o main.o
 	gcc -o cgSolver functions.o $(src).o $(lib)
 
 main.o: main.c
-	gcc -o $(src).o -c $(src).c
+	gcc -std=c99 -o $(src).o -c $(src).c
 
 functions.o: functions.c
-	gcc -o functions.o -c functions.c
+	gcc -std=c99 -o functions.o -c functions.c
 
 cleanBefore:
 	rm -rf cgSolver
