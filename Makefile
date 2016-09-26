@@ -2,7 +2,7 @@
 lib = -lm
 src = main
 
-all: cleanBefore functions.o main.o main clean
+all: cleanBefore functions.o main.o main cleanMake
 
 main: functions.o main.o
 	gcc -o cgSolver functions.o $(src).o $(lib)
@@ -17,4 +17,7 @@ cleanBefore:
 	rm -rf cgSolver
 
 clean:
+	rm -rf *.o *~ cgSolver
+	
+cleanMake:
 	rm -rf *.o *~

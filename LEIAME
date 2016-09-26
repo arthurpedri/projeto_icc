@@ -1,0 +1,82 @@
+###############################################
+# Arthur Pedri Trevisol - GRR20141784
+# Guilherme Gomes dos Santos - GRR20124499
+###############################################
+
+##############################################
+LISTA DE ARQUIVOS
+##############################################
+    lib.h        Arquivo contendo a declaração das variáveis globais, os protótipos das funções contidas em functions.c 
+                 e as outras bibliotecas utilizadas.
+                  
+    functions.c  Corpo das funções declaradas em lib.h, incluindo funções da definição do trabalho.  
+    
+    main.c       Código da função principal, com a atribuição dos vetores e matrizes necessários e a implementação do método
+                 do gradiente conjugado.
+                  
+    Makefile     Gera os arquivos executáveis compilando os módulos do programa.
+    
+    LEIAME       Arquivo com o relatório do trabalho e descrição dos arquivos contidos na pasta.
+
+
+##############################################
+ESTRUTURA DE DADOS
+##############################################
+    Matriz A nxn (double **):
+        Decidimos usar uma matriz n por n para armazenar a matriz de coeficientes (A).
+        Para cada diagonal criada na função de geração de diagonais nosso programa salva essa diagonal
+        na matriz, de maneira que diag[i] do vetor da diagonal gerada é mapeado para as posições
+        A[i+k][i] e A[i][i+k] da matriz, onde k é a diagonal sendo tratada (0 é diagonal principal).
+        Sabemos que a representação por matriz é completamente ineficaz, porém decidimos utiliza-la por ter implementação
+        simples e assim poderíamos focar na corretude do método. 
+        A melhoria dessa estrutura será feita no trabalho 2.
+    Demais estrutudas:
+         
+        X : Vetor solucao X, inicializado com 0 pela calloc();
+        r : Vetor para o residuo r em cada iteracao
+        b : Vetor de termos independentes b;
+ 
+        AX - Vetor auxiliar para armazenar A * X;
+        Ar = Vetor auxiliar para armazenar A * r;
+        v_res = Vetor para guardar a norma de cada iteracao;
+        v_erroAprox = Vetor para guardar o erro absoluto aproximado de cada iteracao;
+        v_tempoRes = Vetor para armazenar o tempo gasto no calculo de cada residuo;
+        v_tempoIter = Vetor para armazenar o tempo gasto na execucao de cada iteracao;
+        norma_res_old = Guarda o valor da norma da iteracao anterior
+        s = variavel auxiliar, s = r'r / r'Ar
+##############################################
+ALGORITMO
+##############################################
+    - Optamos por utilizar o algoritmo descrito no livro. 
+    - Após geradas as diagonais pela funcao generateRandomDiagonal, preenchemos a matriz A com os valores destas diagonais.
+    - Ao fazer testes de mesa foi facil perceber que poderiamos prencher as diagonais simetricas "simultaneamente",
+    utilizando A[i][i + k] para as diagonais superiores e A[i + k][i] para as inferiores.
+    
+    //Cria matriz A com as diagonais
+    for (int k = 0; k <= nBandas/2; k++){
+        generateRandomDiagonal(n, k, nBandas, diag );
+        for (int i = 0; i < n - k; i++){ // percorre o vetor
+            A[i][i + k] = diag[i];
+            A[i + k][i] = diag[i];
+        }
+    }
+    
+    - a função produtoInterno() executa a multiplicação de vetores e retorna o escalar, utilizamos essa função dentro
+    da produtoMatrizVetor(). 
+    - Como utilizamos a função calloc() para alocar espaço para o vetor X, ele já é preenchido automaticamente com 0,
+    dessa forma a primeira iteração do método é bem ineficiente, ocorre o produto interno de "Ax", onde x é sempre 0,
+    além da subtração b - Ax. 
+    - No cálculo da variável auxiliar s, Para evitar a divisão por 0, verificamos se o divisor é menor que LDBL_EPSILON 
+    (ja que 0 pode nao ser realmente 0 absoluto em ponto flutuante). 
+##############################################
+DIFICULDADES ENCONTRADAS
+##############################################
+    Tentamos por um bom tempo implementar o metodo utlizando uma estrutura mais eficiente,
+    um vetor que armazenava apenas a diagonal principal e diagonais superiores (matriz simetrica), 
+    porem devido a algum erro que nao encontramos (provavelmente nos calculos de indices), o metodo 
+    nao funcionava, e as vezes ocorriam segmentation faults, por isso mudamos a estrutura de dados
+    para a forma mais simples, a matriz nxn. Dessa forma, varios calculos desnecessarios sao feitos,
+    muitas multiplicacoes por 0 e multiplicacoes repetidas. Esperamos conseguir implementar a melhoria 
+    da estrutura de dados no trabalho 2.
+    
+    

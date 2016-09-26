@@ -13,6 +13,10 @@ void testa_parametros(int argc, char const *argv[]){
         fprintf(stderr, "ERRO: nBandas negativo: %s\n", argv[2]);
         exit(-1);
     }
+    else if (nBandas % 2 == 0){
+        fprintf(stderr, "ERRO: nBandas par: %s\n", argv[2]);
+        exit(-1);
+    }
     int i = 3;
     if (!strcmp(argv[i],"-i")) {
         i++;
@@ -115,30 +119,41 @@ double f (double x){
     return 4*(M_PI*M_PI)*(sin((2*M_PI)*x) + sin(2*M_PI*(M_PI-x)));
 }
 
-// void grava_arquivo(){
+
+
+void imprimeArquivo(double *tempoIter, double *tempoRes, double *res, double *erroAprox, double *X, int k){
+    
         // int i, j;
-        // fprintf(output,"#########################################\n");
-        // fprintf(output, "# Tempo Método CG: %lf\n", sor_time);
-        // fprintf(output, "# Tempo Resíduo: %lf\n", res_time);
-        // fprintf(output, "#\n# Norma Euclidiana do Residuo e Erro aproximado");
+        double menorRes = tempoRes[0], maiorRes = tempoRes[0], menorIter = tempoIter[0], maiorIter = tempoIter[0];
+        double mediaIter = tempoIter[0], mediaRes = tempoRes[0];
+        for (int i = 1; i < k; i++){
+            if (tempoRes[i] < menorRes){
+                menorRes = tempoRes[i];
+            } else if (tempoRes[i] > maiorRes){
+                maiorRes = tempoRes[i];
+            }
+            if (tempoIter[i] < menorIter){
+                menorIter = tempoIter[i];
+            } else if (tempoIter[i] > maiorIter){
+                maiorIter = tempoIter[i];
+            }
+            mediaIter += tempoIter[i];
+            mediaRes += tempoRes[i];
+        }
+        mediaIter = mediaIter/k;
+        mediaRes = mediaRes/k;
+        
+        fprintf(output,"###########\n");
+        fprintf(output, "# Tempo Método CG: %lf %lf %lf\n", fabs(menorIter), fabs(mediaIter), fabs(maiorIter));
+        fprintf(output, "# Tempo Resíduo: %lf %lf %lf\n", fabs(menorRes), fabs(mediaRes), fabs(maiorRes));
+        fprintf(output, "#\n# Norma Euclidiana do Residuo e Erro aproximado\n");
 
-        // for (i = 0; i < maxIter; i++) {
-        //     fprintf(output, "# i=%d: %f\n", i, res[i]);
-        // }
-        // fprintf(output, "#########################################\n");
-        // fprintf(output, "%d\n", n);
-
-        // //GNU plot
-        // fprintf(output, "set title  'ICC'\n");
-        // fprintf(output, "set xlabel 'x'\n");
-        // fprintf(output, "set ylabel 'y'\n");
-        // fprintf(output, "set zlabel 'z'\n");
-//      fprintf(output, "splot '-' with lines\n");
-
-        //Vetor solucao
-//      for (i = 0; i < ny; i++) {
-//         for (j = 0; j < nx; j++) {
-//             fprintf(output,"%.3f %.3f %.3f\n", (hx*j), (hy *i), matriz[i*nx+j]);
-//         }
-//     }
-// }
+        for (int i = 0; i < k; i++) {
+            fprintf(output, "# i=%d: %.14g %.14g\n", i, res[i], erroAprox[i]);
+        }
+        fprintf(output, "###########\n");
+        fprintf(output, "%d\n", n);
+        for (int i = 0; i < n; i++){
+            fprintf(output, "%.14g ", X[i]);
+        }
+}
