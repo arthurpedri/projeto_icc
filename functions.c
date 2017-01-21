@@ -1,7 +1,7 @@
 #include "lib.h"
 
 void testa_parametros(int argc, char const *argv[]){
-    
+
     n = atoi(argv[1]);
     maxIter = n;
     if (n < 0) {
@@ -22,12 +22,12 @@ void testa_parametros(int argc, char const *argv[]){
         i++;
         maxIter = atoi(argv[i]);
         i++;
-    } 
+    }
     if (!strcmp(argv[i],"-t")) {
         i++;
         tolerancia = atof(argv[i]);
         i++;
-    } 
+    }
     if (!strcmp(argv[i],"-o")) {
         i++;
         arquivo_saida = malloc(sizeof(char) * strlen(argv[i]));
@@ -69,10 +69,10 @@ int generateRandomDiagonal( unsigned int N, unsigned int k, unsigned int nBandas
   return (0);
 }
 
-void imprimeMatriz (double **matriz){
+void imprimeMatriz (double *matriz){
     for (int i = 0; i < n; i++){
         for (int j = 0; j < n; j++){
-            printf("%.5g ", matriz[i][j]);
+            printf("%.5g ", matriz[i*n +j]);
         }
         printf("\n");
     }
@@ -107,9 +107,14 @@ double norma_residuo(double *r){
     return sqrt(resultado);
 }
 
-void produtoMatrizVetor (double *resultado, double **matriz, double *vetor){ // melhorar para não multiplicar os zeros
+void produtoMatrizVetor (double *resultado, double *matriz, double *vetor){ // melhorar para não multiplicar os zeros
+    double soma;
     for(int i = 0; i < n; i++){
-        resultado[i] = produtoInterno(matriz[i],vetor);
+        soma = 0.0;
+        for(int j = 0; j < n; j++){
+            soma = soma + (matriz[i*n + j] * vetor[j]);
+        }
+        resultado[i] = soma;
     }
 }
 
@@ -122,7 +127,7 @@ double f (double x){
 
 
 void imprimeArquivo(double *tempoIter, double *tempoRes, double *res, double *erroAprox, double *X, int k){
-    
+
         // int i, j;
         double menorRes = tempoRes[0], maiorRes = tempoRes[0], menorIter = tempoIter[0], maiorIter = tempoIter[0];
         double mediaIter = tempoIter[0], mediaRes = tempoRes[0];
@@ -142,7 +147,7 @@ void imprimeArquivo(double *tempoIter, double *tempoRes, double *res, double *er
         }
         mediaIter = mediaIter/k;
         mediaRes = mediaRes/k;
-        
+
         fprintf(output,"###########\n");
         fprintf(output, "# Tempo Método CG: %lf %lf %lf\n", fabs(menorIter), fabs(mediaIter), fabs(maiorIter));
         fprintf(output, "# Tempo Resíduo: %lf %lf %lf\n", fabs(menorRes), fabs(mediaRes), fabs(maiorRes));
