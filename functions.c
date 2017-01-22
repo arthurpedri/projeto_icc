@@ -102,17 +102,20 @@ void subtracaoVetores (double *resultado, double *vetor1, double *vetor2){
 double norma_residuo(double *r){
     double resultado;
     for(int i = 0; i < n; i++){
-        resultado += pow(r[i], 2);
+        resultado += r[i] * r[i];
     }
     return sqrt(resultado);
 }
 
 void produtoMatrizVetor (double *resultado, double *matriz, double *vetor){ // melhorar para não multiplicar os zeros
     double soma;
+    int k = nBandas/2;
     for(int i = 0; i < n; i++){
         soma = 0.0;
         for(int j = 0; j < n; j++){
-            soma = soma + (matriz[i*n + j] * vetor[j]);
+            if((i - j) < k){
+                soma = soma + (matriz[i*n + j] * vetor[j]);
+            }
         }
         resultado[i] = soma;
     }

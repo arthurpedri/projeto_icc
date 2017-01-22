@@ -38,6 +38,7 @@ int main(int argc, char const *argv[]) {
         b[i] = f((i*M_PI)/n);
     }
 
+    imprimeVetor(b, n);
     //Cria matriz A com as diagonais
     for (int k = 0; k <= nBandas/2; k++){
         generateRandomDiagonal(n, k, nBandas, diag );
@@ -99,7 +100,7 @@ int main(int argc, char const *argv[]) {
         }
     }
 
-    imprimeArquivo(v_tempoIter, v_tempoRes, v_res, v_erroAprox, X, k);
+    imprimeArquivo(v_tempoIter, v_tempoRes, v_res, v_erroAprox, AX, k);
 
     //Desaloca as estruturas
     free(A);
