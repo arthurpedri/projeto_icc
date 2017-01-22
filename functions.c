@@ -110,15 +110,38 @@ double norma_residuo(double *r){
 void produtoMatrizVetor (double *resultado, double *matriz, double *vetor){ // melhorar para não multiplicar os zeros
     double soma;
     int k = nBandas/2;
-    for(int i = 0; i < n; i++){
-        soma = 0.0;
-        for(int j = 0; j < n; j++){
-            if((i - j) < k){
-                soma = soma + (matriz[i*n + j] * vetor[j]);
-            }
+    // for(int i = 0; i < n; i++){
+    //     soma = 0.0;
+    //     for(int j = 0; j < nBandas; j++){
+    //         // if((i - j) < k){
+    //             soma = soma + (matriz[i*nBandas + j] * vetor[j]);
+    //         // }
+    //     }
+    //     resultado[i] = soma;
+    // }
+    for(int i = 0; i < k ; i++){
+        for(int j = k - i; j < nBandas; j++){
+            resultado[i] += matriz[i*nBandas + j] * vetor[i - k + j];
         }
-        resultado[i] = soma;
     }
+    
+    int cont = 1;
+    for(int i = n - k; i < n ; i++){
+        for(int j = 0; j < nBandas - cont; j++){
+            resultado[i] += matriz[i*nBandas + j] * vetor[i - k + j];
+            cont++;
+        }
+    }
+    
+    for(int i = k; i < n-k; i++){
+        for(int j = 0; j < nBandas; j++){
+            resultado[i] += matriz[i*nBandas + j] * vetor[i - k + j];
+            // i = 1, k = 1, j = 0 => x[0]
+            // i = 1, k = 1, j = 1 => x[1]
+        }
+    }
+    
+    
 }
 
 

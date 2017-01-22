@@ -9,7 +9,7 @@ int main(int argc, char const *argv[]) {
     // for (int i = 0; i < n; i++){
     //     A[i] = (double *) calloc(n, sizeof(double));
     // }
-    double *A = (double *) malloc(sizeof(double)*n*n);
+    double *A = (double *) malloc(sizeof(double)*n*nBandas);
 
     if (A == NULL){
         fprintf(stderr, "Erro durante alocacao de memoria para matriz A\n");
@@ -39,16 +39,59 @@ int main(int argc, char const *argv[]) {
     }
 
     imprimeVetor(b, n);
+   
     //Cria matriz A com as diagonais
-    for (int k = 0; k <= nBandas/2; k++){
-        generateRandomDiagonal(n, k, nBandas, diag );
-        for (int i = 0; i < n - k; i++){ // percorre o vetor
+    for (int j = 0; j < nBandas; j++){
+        generateRandomDiagonal(n, j, nBandas, diag );
+         int k = nBandas/2;
+        for (int i = 0; i < n; i++){ // percorre o vetor
+            
             // A[i][i + k] = diag[i];
             // A[i + k][i] = diag[i];
-            A[i*n + (i + k)] = diag[i];
-            A[(i + k)*n + i] = diag[i];
+            
+            if (i >=  (n - j))
+                A[i*nBandas + (k+j)] = 0;
+            else
+                A[i*nBandas + (k+j)] = diag[i]; //diagonal superior
+            if (i < j) 
+                A[i*nBandas + (k-j)] = 0;
+            else
+                A[i*nBandas + (k-j)] = diag[i]; //espelho
+            
+            // A[i*nBandas + k] = diag[i];
+            
+            // if(k < i)
+            //     A[(i+1)*nBandas - k] = 0;
+            // else
+            //     A[(i+1)*nBandas - k] = diag[i];
+            
+            
+           
+            // a b c 0 0 0 0 0         0 0 a b c     0
+            // e f g h 0 0 0 0  ===>   0 e f g h     1   
+            
+            // i j k l m 0 0 0         i j k l m     2
+            // 0 n o p q r 0 0         n o p q r
+            // 0 0 s t u v w 0
+            // 0 0 0 x y z a b 
+            // 0 0 0 0 c d e f 0 
+            // 0 0 0 0 0 g h i 0 0
+            
+            // e => i=6,j=0,n=8,k=2
+            // f => i=6,j=1,n=8,k=2
+            // 0 => i=6,j=2,n=8,k=2
+            
+            // A B C   0 = Ax0 + Bx1 + Cx2 ==> Ax0 + Bx1
+            // D E F   1 = Dx0 + Ex1 + Fx2 ==> Bx0 + Ex1 + Fx2
+            // G H I   2 = Gx0 + Hx1 + Ix2 ==> 0 + Fx1 + Ix2
+            
+            
+            
+            // A[i*n + (i + k)] = diag[i];
+            // A[(i + k)*n + i] = diag[i];
         }
     }
+
     /*
     * AX - Vetor auxiliar para armazenar A * X;
     * Ar = Vetor auxiliar para armazenar A * r;
@@ -103,16 +146,17 @@ int main(int argc, char const *argv[]) {
     imprimeArquivo(v_tempoIter, v_tempoRes, v_res, v_erroAprox, AX, k);
 
     //Desaloca as estruturas
-    free(A);
-    free(X);
-    free(r);
-    free(b);
-    free(AX);
-    free(Ar);
-    free(v_erroAprox);
-    free(v_res);
-    free(v_tempoIter);
-    free(v_tempoRes);
+    
+    // free(A);
+    // free(X);
+    // free(r);
+    // free(b);
+    // free(AX);
+    // free(Ar);
+    // free(v_erroAprox);
+    // free(v_res);
+    // free(v_tempoIter);
+    // free(v_tempoRes);
 
     fclose(output);
     //for (int i = 0; i < n; i++){
